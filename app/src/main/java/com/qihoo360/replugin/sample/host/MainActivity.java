@@ -107,10 +107,35 @@ public class MainActivity extends Activity {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        simulateInstallExternalPlugin();
+                        simulateInstallExternalPlugin("demo3.apk");
                         pd.dismiss();
                     }
                 }, 1000);
+            }
+        });
+
+        findViewById(R.id.btn_install_apk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog pd = ProgressDialog.show(MainActivity.this, "安装中...", "请等待...", true, true);
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        simulateInstallExternalPlugin("test.apk");
+                        pd.dismiss();
+                    }
+                }, 1000);
+            }
+        });
+
+        findViewById(R.id.btn_open_apk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (RePlugin.isPluginInstalled("com.hjl.testplugin")) {
+                    RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("com.hjl.testplugin", "com.hjl.testplugin.ui.activity.MainActivity1"));
+                } else {
+                    Toast.makeText(MainActivity.this, "请先安装", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -173,26 +198,26 @@ public class MainActivity extends Activity {
      * 模拟安装或升级（覆盖安装）外置插件
      * 注意：为方便演示，外置插件临时放置到Host的assets/external目录下，具体说明见README</p>
      */
-    private void simulateInstallExternalPlugin() {
-        String demo3Apk= "demo3.apk";
-        String demo3apkPath = "external" + File.separator + demo3Apk;
+    private void simulateInstallExternalPlugin(String apk) {
+        String apkPath = "external" + File.separator + apk;
 
         // 文件是否已经存在？直接删除重来
-        String pluginFilePath = getFilesDir().getAbsolutePath() + File.separator + demo3Apk;
+        String pluginFilePath = getFilesDir().getAbsolutePath() + File.separator + apk;
         File pluginFile = new File(pluginFilePath);
         if (pluginFile.exists()) {
             FileUtils.deleteQuietly(pluginFile);
         }
 
         // 开始复制
-        copyAssetsFileToAppFiles(demo3apkPath, demo3Apk);
+        copyAssetsFileToAppFiles(apkPath, apk);
         PluginInfo info = null;
         if (pluginFile.exists()) {
             info = RePlugin.install(pluginFilePath);
         }
 
         if (info != null) {
-            RePlugin.startActivity(MainActivity.this, RePlugin.createIntent(info.getName(), "com.qihoo360.replugin.sample.demo3.MainActivity"));
+            Toast.makeText(MainActivity.this, "安装成功" + apk, Toast.LENGTH_SHORT).show();
+            //RePlugin.startActivity(MainActivity.this, RePlugin.createIntent(info.getName(), "com.qihoo360.replugin.sample.demo3.MainActivity"));
         } else {
             Toast.makeText(MainActivity.this, "install external plugin failed", Toast.LENGTH_SHORT).show();
         }
