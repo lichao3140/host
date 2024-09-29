@@ -121,7 +121,8 @@ public class MainActivity extends Activity {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        simulateInstallExternalPlugin("test.apk");
+                        //simulateInstallExternalPlugin("app-debug.apk");
+                        simulateInstallExternalPlugin("test2.apk");
                         pd.dismiss();
                     }
                 }, 1000);
@@ -131,8 +132,8 @@ public class MainActivity extends Activity {
         findViewById(R.id.btn_open_apk).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (RePlugin.isPluginInstalled("com.hjl.testplugin")) {
-                    RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("com.hjl.testplugin", "com.hjl.testplugin.ui.activity.MainActivity1"));
+                if (RePlugin.isPluginInstalled("com.hjl.plugin")) {
+                    RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("com.hjl.plugin", "com.hjl.plugin.MainActivity"));
                 } else {
                     Toast.makeText(MainActivity.this, "请先安装", Toast.LENGTH_SHORT).show();
                 }
